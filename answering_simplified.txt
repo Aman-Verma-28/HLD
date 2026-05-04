@@ -1,0 +1,91 @@
+-> Requirements Clarification (3-5 minutes)
+    -> Functional Requirements 
+        -> 5-6 points 
+        -> 2-3 questions
+    -> Non-Functional Requirements
+        -> Scale (DAU, QPS, Storage, Bandwidth, etc.)
+        -> Latency (during normal operation, during peak hours, during failures, etc.)
+        -> Availability
+        -> Consistency (Eventual, Strong, etc.)
+        -> Anything specific to the problem domain (2 points around this)
+
+-> Estimation (2-3 minutes)
+    -> Traffic (QPS)
+    -> Storage 
+    -> Anything specific to the problem domain (1 point around this)
+
+-> Core Entities (3-5 minutes) (Follow Bottom Up Approach)
+    -> Provide 5-8 core entities
+
+-> API Design (3-5 minutes)
+    -> List down the APIs and their responsibilities (5-8 APIs)
+        -> Each API should satisfy the functional requirements
+        -> For each API give 2 points 
+        -> First point about the API itself and what it does
+        -> Second point about the request and response format
+        -> E.g. Search API: Handles search of restaurants and menu items with cursor-based pagination for free text search.
+        -> E.g. Search API: Request: GET /v1/search?query=pizza&location=New York, Response: { results: [restaurant, menu item] } Cursor-based pagination.
+
+-> High Level Design (10-12 minutes)
+    -> List down the services and their responsibilities (5-8 services)
+        -> Each service should satisfy the functional requirements
+        -> For each service give 1 point 
+        -> E.g. Search Service: Handles search of restaurants and menu items.
+
+    -> List down the database layer 
+        -> Each database layer should interact with the core entities
+        -> For each database layer give 1 point 
+        -> E.g. Restaurant DB: Interacts with the Search Service & Menu Item Service.
+        -> For each DB list out the schema and the key-value pairs (if any) and which DB are we e.g. PSQL or Cassandra or Redis or etc.
+        -> Mention that why we are using this DB and why not other DBs.
+
+    -> List down the cache layer and any other components that are required to make the system work
+        -> For each component give 2 points
+        -> First point about the component itself and where it sits 
+        -> Second point about the interactions with other components
+        -> E.g Redis cache: Sits between the Search Service and the Restaurant DB.
+        -> This is a cache-aside pattern where the Search Service reads the search results from the Redis cache and the Restaurant DB writes the search results to the Redis cache.
+
+    -> List down the queue layer and any other components that are required to make the system work
+        -> For each component give 2 points
+        -> First point about the component itself and where it sits 
+        -> Second point about the interactions with other components
+        -> E.g Kafka queue: Sits between the Order Service and Payment, Notification & Shipping Services.
+        -> This is a fan-out pattern where the Order Service publishes the order details to the Kafka queue and the Payment, Notification & Shipping Services consume the order details from the Kafka queue.
+
+    -> Draw the architecture diagram
+        -> Use consistent shapes (boxes for services, cylinders for databases, arrows for data flow)
+
+-> Deep Dives and Trade-offs (12-15 minutes)
+    -> Discuss the critical components (Pick 3-4 critical components that explains senior level thinking) (Use your own judgement to pick the critical components)
+    -> These components should be likely around event driven architecture, caching, queuing, sharding, distributed systems, etc.
+        -> All these points should satisfy the non-functional requirements of the system and the problem domain.
+        -> For each critical component, give 3-5 points as below, and consider using a real-world example.
+        -> For each critical component give 3-5 points 
+        -> First point about the component itself and where it sits 
+        -> Second point about the interactions with other components
+        -> Third point about why it is critical and why do we need it
+        -> Fourth point about the other approaches to solve the problem and the trade-offs
+        -> Fifth point about the recommendation and why we chose this approach
+        -> Example: Apache Kafka as a Message Queue in an E-commerce Website (between Payment Service, Checkout Service, and Inventory Service)
+            -> (1) Kafka is a distributed messaging system that acts as a central queue, sitting between the Checkout Service (producer) and the Payment & Inventory Services (consumers).
+            -> (2) The Checkout Service sends (publishes) a message to Kafka when a user places an order. The Payment Service and Inventory Service subscribe to relevant Kafka topics and consume these messages. This enables loosely coupled communication and asynchronous processing.
+            -> (3) This is critical for ensuring order reliability and decoupling services—without Kafka, a failure in Payment or Inventory Service could break the end-to-end checkout flow, hurting availability and scalability.
+            -> (4) Other approaches could involve direct synchronous API calls (tight coupling, lower resilience) or using other message brokers like RabbitMQ (which may have different durability/performance profiles). Trade-offs involve setup complexity, required throughput, and delivery guarantees.
+            -> (5) Kafka is recommended because it provides durability, high throughput, fault-tolerance, message replay, and scalable pub-sub needed for high-volume e-commerce transactions, satisfying non-functional requirements like availability, consistency, reliability, scalability, and eventual consistency for distributed operations.
+
+-> Wrap-Up (2-3 minutes)
+    -> Summarize the design (2 points)
+        -> First point about the design itself and how it satisfies the functional requirements
+        -> Second point about the trade-offs and performance optimizations
+    -> Summarize the trade-offs (2 points)
+        -> First point about the trade-offs and performance optimizations
+        -> Second point about the maintainability optimizations
+    -> Summarize the performance optimizations (2 points)
+        -> First point about the performance optimizations
+        -> Second point about the scalability optimizations
+    -> Explain how the system could be extended further if needed (2 points)
+        -> First point about the extensibility of the system
+        -> Second point about the future improvements
+    -> Generate few follow-up questions to the interviewer
+        -> 3-4 followup questions and their answers

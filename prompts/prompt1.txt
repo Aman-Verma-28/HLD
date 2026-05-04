@@ -1,0 +1,95 @@
+I am interviewing for a SDE2 role at Uber. In the HLD interview, I am asked to design the following system: (in screenshot)
+Answer it such that it gives good signal of a SDE2 candidate. If I have to emphasize something, please start that sentence with [IMPORTANT].
+Use [IMPORTANT] only for things that are absolutely critical to the design.
+
+Can you please help me design the system. I need the following details only:
+Do not give any other details.
+
+1. Requirements
+-> Functional Requirements:
+    -> 4-6 points 
+    -> Each point should be of one line max and should be a single sentence.
+    -> Each point should be a single feature of the system.
+
+    E.g.:
+    
+    1. Functional Requirements
+
+    Riders should be able to get a fare estimation based on start location and destination
+    Riders should be able to request for a ride based on the estimated fare
+    Riders should be able to request different categories of car (Sedan, SUV, Bike, Auto)
+    Rider can see available drivers nearby in real-time on map with their current pickup/drop-off
+    Upon request, riders should be matched with a driver who is nearby (geo-proximity matching)
+    Get real-time tracking of the driver & user location during trip
+    After trip ends, rider should be able to rate their ride post-trip and make payment
+    Drivers should be able to accept/deny ride requests and update their status (available/busy/offline)
+
+    -> Give 2-3 clarifying questions to the interviewer to confirm the requirements.
+    -> Each question should be a single sentence and should be a single question.
+    -> E.g.:
+    -> Question 1: Are we designing for global scale across cities, or a single region first?
+    -> Question 2: For 'nearby' — is the radius user-configurable or fixed?
+    -> Question 3: Are we designing for global scale across cities, or a single region first?
+    -> Question 4: For 'nearby' — is the radius user-configurable or fixed?
+    -> Question 5: Are we designing for global scale across cities, or a single region first?
+    -> Question 6: For 'nearby' — is the radius user-configurable or fixed?
+
+-> Non-Functional Requirements:
+    -> 4-6 points 
+    -> Each point should be of one line max and should be a single sentence.
+    -> Each point should be a single quality attribute of the system.
+    -> E.g.:
+    2. Non-Functional Requirements
+
+    Scale
+    Users & Drivers — 100M users and 10M drivers globally
+    Concurrent Rides — 100K concurrent rides at peak hours
+    Performance & Consistency
+    CAP Theorem — Availability >> consistency (user) BUT consistency >> availability (driver assignment) - prevent double assignment
+    Ride Matching — Prevent any driver from being assigned multiple rides simultaneously (strong consistency) - one driver can have at most one active ride; one rider can have at most one active ride
+    Latency — <1 sec: driver should get assigned to a particular ride request, real-time location updates every 3-5 seconds
+
+-> Estimation:
+    -> 2-3 points 
+    -> Each point should be of one line max and should be a single sentence.
+    -> Each point should be a single number or a single calculation.
+    -> E.g.:
+    -> Estimation:
+    -> Traffic: 100M users * 10 rides/day = 1B rides/day
+    -> Storage: 1B rides/day * 1KB = 1TB/day
+    -> Bandwidth: 1B rides/day * 1KB = 1TB/day
+
+-> Core Entities:
+    -> 4-8 points 
+    -> Each point should be of one line max and should be a single sentence.
+    -> Each point should be a single entity of the system.
+    -> E.g.:
+    
+    3. Core Entities
+
+    1. Rider - user_id, name, email, phone, payment_methods, current_location (lat/lon)
+    2. Driver - driver_id, name, vehicle_details (type, model, license_plate), rating, status (available/busy/offline), current_location
+    3. Location - Geospatial coordinates with timestamp for real-time tracking
+    4. Fare - fare_id, base_fare, distance_fare, time_fare, surge_multiplier, total_amount
+    5. Ride/Trip - ride_id, rider_id, driver_id, pickup_location, drop_location, status (requested/matched/started/completed/cancelled), estimated_fare, actual_fare, start_time, end_time
+    6. Rating - rating_id, ride_id, rider_rating (1-5 stars), driver_rating, feedback_text
+    7. Payment - payment_id, ride_id, amount, payment_method, status (pending/completed/failed)
+
+-> API Design:
+    -> 4-6 points
+    -> Each point should be of one line max and should be a single sentence.
+    -> Each point should be a single API of the system.
+    -> E.g.:
+    4. API Designing
+
+    User/Rider APIs
+    POST /v1/api/fare/estimate — Get fare estimation with Request ID (different types of vehicle: Sedan, SUV, Bike, Pool)
+    POST /v1/api/ride/request — {pickup, drop, vehicleType} → Return rideId with driver details (if assigned success) OR (Matched with driver - sent message on the ride)
+    GET /v1/api/ride/history — Get ride history for user
+    POST /v1/api/ride/{rideId}/cancel — Cancel ride request
+    POST /v1/api/ride/{rideId}/rate — Rate driver after trip completion
+    Driver APIs
+    WS /v1/driver/location — WebSocket: {body: Lat, Long} - Update driver geolocation continuously every 3-5 seconds
+    POST /v1/api/ride/rides — {body: requestId, accept/deny} - Driver will accept/deny ride request, return as rideId
+    POST /v1/api/ride/{ride_id}/start — Mark trip as started when driver picks up rider
+    POST /v1/api/ride/{ride_id}/complete — Mark trip as completed when destination reached
