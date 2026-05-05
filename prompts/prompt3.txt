@@ -1,0 +1,4 @@
+Refer the screenshot, I need exactly similar whiteboard design for the given description. In the diagram make sure to add the name and the number of the entity exactly same as the description provided. 
+
+Here are the details for which I need the whiteboard diagram:
+<<Description>>
