@@ -2,6 +2,8 @@ I am interviewing for a SDE2 role at Uber. In the HLD interview, I am asked to d
 Answer it such that it gives good signal of a SDE2 candidate. If I have to emphasize something, please start that sentence with [IMPORTANT].
 Use [IMPORTANT] only for things that are absolutely critical to the design.
 
+[ALWAYS GIVE IN BULLET POINTS WITH BOLD HEADINGS DO NOT MISS THIS INSTRUCTION]
+
 Can you please help me design the system. I need the following details only:
 Do not give any other details.
 
