@@ -1,66 +1,110 @@
-I am interviewing for a SDE2 role at Uber. In the HLD interview, I am asked to design the following system: (in screenshot 1)
+I am interviewing for a SDE2 role at Uber. In the HLD interview, I am asked to design the following system: Design Uber Eats
+
 Answer it such that it gives good signal of a SDE2 candidate. If I have to emphasize something, please start that sentence with [IMPORTANT].
+
 Use [IMPORTANT] only for things that are absolutely critical to the design.
 
 [ALWAYS GIVE IN BULLET POINTS WITH BOLD HEADINGS DO NOT MISS THIS INSTRUCTION]
 
-I have the requirements gathered from the interviewer both functional and non-functional. (Screenshot 2)
+I have the requirements gathered from the interviewer both functional and non-functional. (Screenshot 1)
+
 If anything else is needed, please assume the best for SDE2 level and the design the system, do not ask any questions on this.
 
 Can you please help me design the system. I need the following details only:
+
 Do not give any other details.
 
 -> Draw the architecture diagram in the following format:
--> Check screenshot 3 for the example of the architecture diagram.
+
+-> Check screenshot 2 for the example of the architecture diagram.
+
 -> Do not draw anything, I just need the description of the diagram.
+
 -> Label each entity in the diagram with number and name. 
--> [IMPORTANT] For labelling use it like this, 1. Ride Service then next entity should be the Databases it interacts with. Like 2. Drivers DB, 3. Ride Request DB, 4. Locations DB, etc.
+
 -> Each entity should be of one line max and should be a single sentence.
+
 -> If the entity is a database then give 2 points, first point which type of database and why? and second point about the schema of the database.
 
 E.g.:
+
 1. Ride Service (fare calculation): 
+
     Calculates estimated fare based on pickup/drop distance, surge pricing, vehicle type
+
 2. Driver Matching Service: 
+
     Geo-proximity search to find nearby available drivers, assigns driver to ride request
+
 3. Drivers DB: 
+
     Persistent storage for driver profiles, vehicle details, availability history
+
     -> Type: PostgreSQL (because the data is structured and relational)
+
     -> Schema: driver_id, name, vehicle_details (type, model, license_plate), rating, status (available/busy/offline), current_location
+
 4. Ride Request DB:
+
     Persistent storage for ride requests, assignments, status changes, fare calculations
+
     -> Type: PostgreSQL (because the data is structured and relational)
+
     -> Schema: ride_id, rider_id, driver_id, pickup_location, drop_location, status (requested/matched/started/completed/cancelled), estimated_fare, actual_fare, start_time, end_time
+
 5. Locations DB:
+
     Real-time storage for driver locations, geospatial index
+
     -> Type: Redis (because we need to store the driver locations in real-time and its read heavy)
+
     -> Schema: driver_id, current_location (lat/lon)
 
-
 -> Deep Dives:
+
 -> Give 3-5 deep dives based on the architecture diagram.
+
 -> For each deep dive, give 3-5 bullet points. 
+
 -> Each bullet point should be of one line max and should be a single sentence.
+
 -> First point should be about the deep dive itself and where it sits.
+
 -> Second point should be about the interactions with other components.
+
 -> Third point should be about why it is critical and why do we need it.
+
 -> Fourth point should be about the other approaches to solve the problem and the trade-offs.
+
 -> Fifth point should be about the recommendation and why we chose this approach.
 
 E.g.:
-1. Deep Dive 1: Driver Accept/Decline (prevent double assignment)
--> Driver sees ride request: Push notification received, app shows ride details and clicks 'Accept' or Decline or timeout.
--> Interactions:
-    -> Driver Service: Updates driver status to OFFER_PENDING in Redis (Using Redis Lock so that only one driver can be offered to a ride)
-    -> Notification Service: Sends offer with 10–15s TTL
-    -> Trip Service: On accept → transitions ride state via Trip Service; on decline/timeout → releases the reservation and tries the next candidate.
--> Why critical: Without this, a popular driver in a busy zone could be simultaneously offered to 5 ride requests. 
-If two riders' apps both showed "matched" → angry users, support tickets, and a bad press cycle. The correctness here is the entire product's reputation.
--> Alternatives + trade-offs:
-    -> Alternative 1: Use a database to store the driver status and ride request. (Using Postgres CAS so that only one driver can be offered to a ride)
-    -> Alternative 2: Use a queue to store the driver status and ride request. (Using Kafka so that only one driver can be offered to a ride)
-    -> These approaches fail because they are not atomic.
--> Recommendation: Use Redis Lock so that only one driver can be offered to a ride.
-    -> Trade-off: Using Redis Lock is not as scalable as using a database or queue. But it is faster than using a database or queue.
 
+1. Deep Dive 1: Driver Accept/Decline (prevent double assignment)
+
+-> Driver sees ride request: Push notification received, app shows ride details and clicks 'Accept' or Decline or timeout.
+
+-> Interactions:
+
+    -> Driver Service: Updates driver status to OFFER_PENDING in Redis (Using Redis Lock so that only one driver can be offered to a ride)
+
+    -> Notification Service: Sends offer with 10–15s TTL
+
+    -> Trip Service: On accept → transitions ride state via Trip Service; on decline/timeout → releases the reservation and tries the next candidate.
+
+-> Why critical: Without this, a popular driver in a busy zone could be simultaneously offered to 5 ride requests. 
+
+If two riders' apps both showed "matched" → angry users, support tickets, and a bad press cycle. The correctness here is the entire product's reputation.
+
+-> Alternatives + trade-offs:
+
+    -> Alternative 1: Use a database to store the driver status and ride request. (Using Postgres CAS so that only one driver can be offered to a ride)
+
+    -> Alternative 2: Use a queue to store the driver status and ride request. (Using Kafka so that only one driver can be offered to a ride)
+
+    -> These approaches fail because they are not atomic.
+
+-> Recommendation: Use Redis Lock so that only one driver can be offered to a ride.
+
+    -> Trade-off: Using Redis Lock is not as scalable as using a database or queue. But it is faster than using a database or queue.
 
