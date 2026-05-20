@@ -40,13 +40,12 @@ E.g.:
 
 -> Deep Dives:
 -> Give 3-5 deep dives based on the architecture diagram.
--> For each deep dive, give 3-5 bullet points. 
+-> For each deep dive, give 2-3 bullet points. 
 -> Each bullet point should be of one line max and should be a single sentence.
--> First point should be about the deep dive itself and where it sits.
--> Second point should be about the interactions with other components.
--> Third point should be about why it is critical and why do we need it.
--> Fourth point should be about the other approaches to solve the problem and the trade-offs.
--> Fifth point should be about the recommendation and why we chose this approach.
+-> First point should be about the problem and why it is critical.
+-> Second point should be about the alternative approaches to solve the problem and the trade-offs.
+-> Third point should be about the recommendation and why we chose this approach.
+-> Each of these should be a single sentence and should be of one line max. (MAKE IT VERY CONCISE)
 
 E.g.:
 1. Deep Dive 1: Driver Accept/Decline (prevent double assignment)
