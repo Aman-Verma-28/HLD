@@ -4,14 +4,15 @@ Use [IMPORTANT] only for things that are absolutely critical to the design.
 
 [ALWAYS GIVE IN BULLET POINTS WITH BOLD HEADINGS DO NOT MISS THIS INSTRUCTION]
 
-I have the requirements gathered from the interviewer both functional and non-functional. (Screenshot 2)
+I have attached an example of the architecture diagram in screenshot 2.
+I have the requirements gathered from the interviewer both functional and non-functional. (Screenshot 3)
 If anything else is needed, please assume the best for SDE2 level and the design the system, do not ask any questions on this.
 
 Can you please help me design the system. I need the following details only:
 Do not give any other details.
 
 -> Draw the architecture diagram in the following format:
--> Check screenshot 3 for the example of the architecture diagram.
+-> Check screenshot 2 for the example of the architecture diagram.
 -> Do not draw anything, I just need the description of the diagram.
 -> Label each entity in the diagram with number and name. 
 -> [IMPORTANT] For labelling use it like this, 1. Ride Service then next entity should be the Databases it interacts with. Like 2. Drivers DB, 3. Ride Request DB, 4. Locations DB, etc.
