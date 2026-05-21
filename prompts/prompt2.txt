@@ -39,9 +39,9 @@ E.g.:
 
 
 -> Deep Dives:
--> Give 3-5 deep dives based on the architecture diagram.
--> For each deep dive, give 2-3 bullet points. 
--> Each bullet point should be of one line max and should be a single sentence.
+-> Give 3-4 deep dives based on the architecture diagram.
+-> For each deep dive, give 3 bullet points. 
+-> [CRITICAL] Each of these bullet points should be a single sentence and should be of one line max. (MAKE IT VERY CONCISE)
 -> First point should be about the problem and why it is critical.
 -> Second point should be about the alternative approaches to solve the problem and the trade-offs.
 -> Third point should be about the recommendation and why we chose this approach.
