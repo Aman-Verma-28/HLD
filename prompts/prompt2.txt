@@ -15,7 +15,7 @@ Do not give any other details.
 -> Check screenshot 2 for the example of the architecture diagram.
 -> Do not draw anything, I just need the description of the diagram.
 -> Label each entity in the diagram with number and name. 
--> [IMPORTANT] For labelling use it like this, 1. Ride Service then next entity should be the Databases it interacts with. Like 2. Drivers DB, 3. Ride Request DB, 4. Locations DB, etc.
+-> [IMPORTANT & CRITICAL] For labelling use it like this, 1. Ride Service then next entity should be the Databases it interacts with. Like 2. Drivers DB, 3. Ride Request DB, 4. Locations DB, etc.
 -> Each entity should be of one line max and should be a single sentence.
 -> If the entity is a database then give 2 points, first point which type of database and why? and second point about the schema of the database.
 
